@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌐 GitHub Links Viewer</title>
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .link-card {
+      transition: all 0.3s ease;
+    }
+    .link-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="max-w-md w-full">
+    <h1 class="text-3xl font-bold mb-6 text-center">🌟 GitHub Links</h1>
+    <div id="linkContainer" class="space-y-4"></div>
+  </div>
+
+  <script>
+    async function loadLinks() {
+      try {
+        const response = await fetch("github_website_urls.txt");
+        const text = await response.text();
+        const lines = text.split("\n").filter(line => line.trim() !== "");
+
+        const container = document.getElementById("linkContainer");
+        container.innerHTML = "";
+
+        lines.forEach(line => {
+          const [title, url] = line.split("|");
+          if (title && url) {
+            const card = document.createElement("button");
+            card.className =
+              "link-card w-full bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-2xl text-left";
+            card.textContent = title.trim();
+            card.onclick = () => {
+              window.location.href = url.trim(); // Opens inside WebView
+            };
+            container.appendChild(card);
+          }
+        });
+      } catch (error) {
+        console.error("Error loading links:", error);
+      }
+    }
+
+    loadLinks();
+  </script>
+
+</body>
+</html>
